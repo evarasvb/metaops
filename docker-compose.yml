@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: uvicorn metaops_project.app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=${APP_ENV}
+      - TZ=${TZ}
+      - DATABASE_URL=${DATABASE_URL}
+      - META_APP_ID=${META_APP_ID}
+      - META_APP_SECRET=${META_APP_SECRET}
+      - META_VERIFY_TOKEN=${META_VERIFY_TOKEN}
+      - META_PAGE_ACCESS_TOKEN=${META_PAGE_ACCESS_TOKEN}
+      - META_IG_BUSINESS_ID=${META_IG_BUSINESS_ID}
+      - META_CATALOG_ID=${META_CATALOG_ID}
+      - WA_PHONE_NUMBER_ID=${WA_PHONE_NUMBER_ID}
+      - WA_BUSINESS_ACCOUNT_ID=${WA_BUSINESS_ACCOUNT_ID}
+      - WA_TOKEN=${WA_TOKEN}
+      - GCP_SERVICE_ACCOUNT_JSON_PATH=${GCP_SERVICE_ACCOUNT_JSON_PATH}
+      - GOOGLE_SHEETS_INVENTORY_KEY=${GOOGLE_SHEETS_INVENTORY_KEY}
+      - GOOGLE_SHEETS_REPORTS_KEY=${GOOGLE_SHEETS_REPORTS_KEY}
+      - ALERT_EMAILS=${ALERT_EMAILS}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - ENABLE_ADS=${ENABLE_ADS}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=metaops
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
